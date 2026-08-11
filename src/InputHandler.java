@@ -17,12 +17,12 @@ public class InputHandler {
             shouldConvert = true;
 
             IO.println("What is the currency code for the currency you want to convert from?");
-            sourceCurrency = IO.readln();
+            sourceCurrency = IO.readln().toUpperCase();
             sourceCurrency = ExceptionCheckers.checkStringLengthInBounds("What is the currency code for the currency you want to convert from?", "The currency code should only be 3 characters long.", sourceCurrency, 3);
 
 
             IO.println("What is the currency code for the currency you want to convert to?");
-            targetCurrency = IO.readln();
+            targetCurrency = IO.readln().toUpperCase();
             targetCurrency = ExceptionCheckers.checkStringLengthInBounds("What is the currency code for the currency you want to convert to?", "The currency code should only be 3 characters long.", targetCurrency, 3);
         }
 
@@ -63,7 +63,7 @@ public class InputHandler {
         int calorieAmt = (int) ExceptionCheckers.getValidNumber("How many calories does your food item have?", true);
         calorieAmt = (int) ExceptionCheckers.checkNumberInBounds("How many calories does your food item have?", "Please enter a whole number.", calorieAmt, 0, Integer.MAX_VALUE, true);
 
-        double cost = ExceptionCheckers.getValidNumber("How much did it cost?", false);
+        double cost = ExceptionCheckers.getValidNumber("How much did it cost" + (shouldConvert ? " in " + sourceCurrency : "") + "?", false);
         cost = ExceptionCheckers.checkNumberInBounds("How much did it cost?", "Please enter a positive number.", cost, 0, Integer.MAX_VALUE, false);
 
 

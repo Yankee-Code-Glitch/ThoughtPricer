@@ -33,9 +33,9 @@ public class MathHandler {
         double gramWeight = convertToGrams(foodContext);
 
         if (gramWeight > weighOfCostInPennies) {
-            IO.println("Your food is heavier than the pennies it'd take to buy it.");
+            IO.println("Fun fact: Your food is heavier than the pennies it'd take to buy it.");
         } else if (weighOfCostInPennies > gramWeight) {
-            IO.println("The money you spent to buy your food in pennies is heavier than the food itself.");
+            IO.println("Fun fact: The money you spent to buy your food in pennies is heavier than the food itself.");
         } else {
             IO.println("How...??? The weight in pennies of your food and the weight of your food itself is the same...");
         }
