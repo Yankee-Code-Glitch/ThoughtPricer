@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class InputHandler {
-    public static FoodContext objectMeasurements() {
+    public static FoodContext getFoodContext() {
 
         Scanner scanner = new Scanner(System.in);
         FoodMeasureSystem state;
