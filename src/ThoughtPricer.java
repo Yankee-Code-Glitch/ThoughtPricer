@@ -1,40 +1,40 @@
 public class ThoughtPricer {
 
-    private static double FindCalorieDensity(FoodItem foodItem) {
-        return foodItem.cost() / foodItem.calorieAmt();
+    private static double findCalorieDensity(FoodContext foodContext) {
+        return foodContext.cost() / foodContext.calorieAmt();
     }
 
-    private static double secondsPerARS(double costPerCalorie, double ARSConversionRate) {
+    private static double secondsPerCurrency(double costPerCalorie, double conversionRate) {
         final double CALORIES_PER_HOUR_THINKING = 21.875;
         final double SECONDS_IN_HOUR = 3600;
 
-        double USDPerHour = costPerCalorie * CALORIES_PER_HOUR_THINKING;
-        double ARSPerHour = USDPerHour * ARSConversionRate;
+        double sourceCurrencyPerHour = costPerCalorie * CALORIES_PER_HOUR_THINKING;
+        double targetCurrencyPerHour = sourceCurrencyPerHour * conversionRate;
 
-        return (1 / ARSPerHour) * SECONDS_IN_HOUR;
+        return (1 / targetCurrencyPerHour) * SECONDS_IN_HOUR;
     }
 
-    public static void calculateSecondsPerARS() {
+    public static void calculateSecondsPerCurrency() {
 
-        FoodItem foodItem = InputHandler.objectMeasurements();
+        FoodContext foodContext = InputHandler.objectMeasurements();
 
-        double costPerCalorie = ThoughtPricer.FindCalorieDensity(foodItem);
+        double costPerCalorie = ThoughtPricer.findCalorieDensity(foodContext);
 
-        double secondsPerARS = ThoughtPricer.secondsPerARS(costPerCalorie, CurrencyAPI.getExchangeRate());
+        double secondsPerCurrency = ThoughtPricer.secondsPerCurrency(costPerCalorie, CurrencyAPI.getExchangeRate(foodContext));
 
         boolean isSolid = false;
 
-        if (foodItem.state() == FoodMeasureSystem.KILOS || foodItem.state() == FoodMeasureSystem.POUNDS) {
+        if (foodContext.state() == FoodMeasureSystem.KILOS || foodContext.state() == FoodMeasureSystem.POUNDS) {
             isSolid = true;
         }
 
-        IO.println("You'd get ~" + Math.round(secondsPerARS) + " seconds of thinking per Argentinean peso by " + (isSolid ? "eating" : "drinking") + " that food!");
+        IO.println("You'd get ~" + Math.round(secondsPerCurrency) + " seconds of thinking per " + (foodContext.choice() ? foodContext.targetCurrency() : "generic currency") + " by " + (isSolid ? "eating" : "drinking") + " that!");
 
-        if (secondsPerARS > 180) {
-            int minutesPerARS = (int) Math.floor(secondsPerARS / 60);
-            int secondsLeft = (int) Math.round(secondsPerARS % 60);
+        if (secondsPerCurrency > 180) {
+            int minutesPerCurrency = (int) Math.floor(secondsPerCurrency / 60);
+            int secondsLeft = (int) Math.round(secondsPerCurrency % 60);
 
-            IO.println("That's equivalent to ~" + minutesPerARS + " minutes" + (secondsLeft > 0? " and " + secondsLeft + " seconds" : "") + "!");
+            IO.println("That's equivalent to ~" + minutesPerCurrency + " minutes" + (secondsLeft > 0 ? " and " + secondsLeft + " seconds" : "") + "!");
         }
     }
 }

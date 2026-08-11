@@ -21,14 +21,27 @@ public class ExceptionCheckers {
         return validNumber;
     }
 
-    public static double checkIntegerInBounds(String prompt, String tryAgainMessage, double comparedNum, double lowerBound, double upperBound, boolean isInteger) {
+    public static double checkIntegerInBounds(String userPrompt, String tryAgainMessage, double comparedNum, double lowerBound, double upperBound, boolean isInteger) {
         while (comparedNum <= lowerBound || comparedNum > upperBound) {
             clearScreen();
             IO.println(tryAgainMessage);
-            comparedNum = getValidNumber(prompt, isInteger);
+            comparedNum = getValidNumber(userPrompt, isInteger);
         }
         clearScreen();
         return comparedNum;
+    }
+
+    public static String checkStringLengthInBounds(String prompt, String tryAgainMessage, String comparedString, double equalityBound) {
+
+        while (comparedString.length() != equalityBound) {
+            clearScreen();
+            IO.println(tryAgainMessage);
+            IO.println(prompt);
+            comparedString = IO.readln();
+        }
+        clearScreen();
+
+        return comparedString;
     }
 
     public static void clearScreen() {

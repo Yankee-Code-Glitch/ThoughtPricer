@@ -4,9 +4,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class CurrencyAPI {
-    public static double getExchangeRate(){
+    public static double getExchangeRate(FoodContext foodContext) {
 
-        final int CONVERSION_RATE_BACKUP = 1500;
+        final int CONVERSION_RATE_BACKUP = 1;
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -16,16 +16,38 @@ public class CurrencyAPI {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            //"ARS:" is 6 digits long, so we add 6 to skip ahead of where ARS is
-            int startIndex = response.body().indexOf("\"ARS\":") + 6;
-            int endIndex = response.body().indexOf(",", startIndex);
+            int sourceCurrencyStartIndex = response.body().indexOf("\"" + foodContext.sourceCurrency() + "\":");
+            int sourceCurrencyEndIndex = response.body().indexOf(",", sourceCurrencyStartIndex);
 
-            String rateString = response.body().substring(startIndex, endIndex).trim();
-            return  Double.parseDouble(rateString);
+            if (sourceCurrencyStartIndex == -1) {
+                throw new IllegalArgumentException("This currency is not supported.");
+            }
+
+            if (sourceCurrencyEndIndex == -1) {
+                sourceCurrencyEndIndex = response.body().indexOf("}");
+            }
+
+            //"AAA:" is 6 digits long, so we add 6 to skip ahead of where the currency code is
+            int targetCurrencyStartIndex = response.body().indexOf("\"" + foodContext.targetCurrency() + "\":");
+            int targetCurrencyEndIndex = response.body().indexOf(",", targetCurrencyStartIndex);
+
+            if (targetCurrencyStartIndex == -1) {
+                throw new IllegalArgumentException("This currency is not supported.");
+            }
+
+            if (targetCurrencyEndIndex == -1) {
+                targetCurrencyEndIndex = response.body().indexOf("}");
+            }
+
+            String sourceCurrency = response.body().substring(sourceCurrencyStartIndex + foodContext.sourceCurrency().length() + 3, sourceCurrencyEndIndex).trim();
+            String targetCurrency = response.body().substring(targetCurrencyStartIndex + foodContext.targetCurrency().length() + 3, targetCurrencyEndIndex).trim();
+            return Double.parseDouble(targetCurrency) / Double.parseDouble(sourceCurrency);
 
         } catch (Exception e) {
-            IO.println(e.getMessage());
-            IO.println("Could not reach currency API. Will be using default value of 1500 ARS/USD.");
+            if (foodContext.choice()) {
+                IO.println(e.getMessage());
+                IO.println("Could not reach currency API. The conversion to " + foodContext.targetCurrency() + " will not happen.\n");
+            }
             return CONVERSION_RATE_BACKUP;
         }
     }

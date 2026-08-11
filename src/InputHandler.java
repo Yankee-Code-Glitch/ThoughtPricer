@@ -1,11 +1,33 @@
 import java.util.Scanner;
 
 public class InputHandler {
-    public static FoodItem objectMeasurements() {
+    public static FoodContext objectMeasurements() {
 
         Scanner scanner = new Scanner(System.in);
         FoodMeasureSystem state;
         double weight;
+        String sourceCurrency = "USD";
+        String targetCurrency = "USD";
+        boolean shouldConvert = false;
+
+        IO.println("Hello!\nThis is a program that converts money into seconds you can think given a food. You'll see what I mean.\nPress ENTER to continue.");
+        IO.readln();
+
+        int choiceInput = (int) ExceptionCheckers.getValidNumber("Do you want to convert currencies(1) or stick with normal calculations(2)?", true);
+        choiceInput = (int) ExceptionCheckers.checkIntegerInBounds("Do you want to convert currencies(1) or stick with normal calculations(2)?", "Please enter only a 1 or a 2.", choiceInput, 0, 2, true);
+
+        if (choiceInput == 1) {
+            shouldConvert = true;
+
+            IO.println("What is the currency code for the currency you want to convert from?");
+            sourceCurrency = scanner.nextLine();
+            sourceCurrency = ExceptionCheckers.checkStringLengthInBounds("What is the currency code for the currency you want to convert from?", "The currency code should only be 3 characters long.", sourceCurrency, 3);
+
+
+            IO.println("What is the currency code for the currency you want to convert to?");
+            targetCurrency = scanner.nextLine();
+            targetCurrency = ExceptionCheckers.checkStringLengthInBounds("What is the currency code for the currency you want to convert to?", "The currency code should only be 3 characters long.", targetCurrency, 3);
+        }
 
         while (true) {
             int foodMeasureInput = (int) ExceptionCheckers.getValidNumber("Is your food measured in kilos(1), pounds(2), liters(3), or fluid ounces(4)?", true);
@@ -47,6 +69,7 @@ public class InputHandler {
         double cost = ExceptionCheckers.getValidNumber("How much did it cost?", false);
         cost = ExceptionCheckers.checkIntegerInBounds("How much did it cost?", "Please enter a positive number.", cost, 0, Integer.MAX_VALUE, false);
 
-        return new FoodItem(weight, calorieAmt, cost, state);
+
+        return new FoodContext(weight, calorieAmt, cost, state, sourceCurrency, targetCurrency, shouldConvert);
     }
 }
