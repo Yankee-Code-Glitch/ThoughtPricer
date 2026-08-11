@@ -1,5 +1,6 @@
 public class ExceptionCheckers {
-    public static double getValidNumber(String userPrompt, boolean isInteger) {
+
+    private static double getValidNumber(String userPrompt, boolean isInteger) {
         boolean isInvalid = true;
         double validNumber = 0;
 
@@ -11,7 +12,6 @@ public class ExceptionCheckers {
                 } else {
                     validNumber = Double.parseDouble(IO.readln());
                 }
-
                 isInvalid = false;
             } catch (NumberFormatException e) {
                 clearScreen();
@@ -21,27 +21,38 @@ public class ExceptionCheckers {
         return validNumber;
     }
 
-    public static double checkNumberInBounds(String userPrompt, String tryAgainMessage, double comparedNum, double lowerBound, double upperBound, boolean isInteger) {
-        while (comparedNum <= lowerBound || comparedNum > upperBound) {
+    public static double getValidNumberInBounds(String prompt, String tryAgainMessage, double lowerBound, double upperBound, boolean isInteger) {
+        double userInput;
+
+        while (true) {
+            userInput = getValidNumber(prompt, isInteger);
+
+            if (userInput > lowerBound && userInput <= upperBound) {
+                break;
+            }
+
             clearScreen();
             IO.println(tryAgainMessage);
-            comparedNum = getValidNumber(userPrompt, isInteger);
         }
         clearScreen();
-        return comparedNum;
+        return userInput;
     }
 
-    public static String checkStringLengthInBounds(String prompt, String tryAgainMessage, String comparedString, double equalityBound) {
+    public static String getValidStringLength(String prompt, String tryAgainMessage, int requiredLength) {
+        String userInput;
+        while (true) {
+            IO.println(prompt);
+            userInput = IO.readln();
 
-        while (comparedString.length() != equalityBound) {
+            if (userInput.length() == requiredLength) {
+                break;
+            }
+
             clearScreen();
             IO.println(tryAgainMessage);
-            IO.println(prompt);
-            comparedString = IO.readln();
         }
         clearScreen();
-
-        return comparedString;
+        return userInput;
     }
 
     public static void clearScreen() {
@@ -49,4 +60,3 @@ public class ExceptionCheckers {
         System.out.flush();
     }
 }
-

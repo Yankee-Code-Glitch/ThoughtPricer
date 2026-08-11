@@ -37,7 +37,7 @@ public class MathHandler {
         } else if (weighOfCostInPennies > gramWeight) {
             IO.println("Fun fact: The money you spent to buy your food in pennies is heavier than the food itself.");
         } else {
-            IO.println("How...??? The weight in pennies of your food and the weight of your food itself is the same...");
+            IO.println("How...??? The weight in pennies of your food and the weight of your food itself is the same... Perfectly balanced, as all things should be.");
         }
     }
 }

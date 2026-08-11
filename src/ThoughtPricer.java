@@ -21,7 +21,7 @@ public class ThoughtPricer {
             int minutesPerCurrency = (int) Math.floor(secondsPerCurrency / 60);
             int secondsLeft = (int) Math.round(secondsPerCurrency % 60);
 
-            IO.println("That's equivalent to ~" + minutesPerCurrency + " minutes" + (secondsLeft > 0 ? " and " + secondsLeft + " seconds" : "") + "!");
+            IO.println("That's equivalent to ~" + minutesPerCurrency + " minutes" + (secondsLeft > 0 ? " and " + secondsLeft + " seconds" : "") + "!\n");
 
             MathHandler.comparePennyWeightToFoodWeight(foodContext);
         }
