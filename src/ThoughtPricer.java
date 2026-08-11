@@ -32,7 +32,7 @@ public class ThoughtPricer {
 
         if (secondsPerARS > 180) {
             int minutesPerARS = (int) Math.floor(secondsPerARS / 60);
-            int secondsLeft = (int) Math.round((secondsPerARS / 60) % 60);
+            int secondsLeft = (int) Math.round(secondsPerARS % 60);
 
             IO.println("That's equivalent to ~" + minutesPerARS + " minutes" + (secondsLeft > 0? " and " + secondsLeft + " seconds" : "") + "!");
         }
