@@ -1,5 +1,5 @@
 public enum FoodMeasureSystem {
-    KILOS(1), POUNDS(2), LITERS(3), FLUID_OUNCES(3);
+    KILOS(1), POUNDS(2), LITERS(3), FLUID_OUNCES(4);
 
     private final int foodMeasureIndex;
 

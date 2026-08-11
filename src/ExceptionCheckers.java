@@ -21,11 +21,11 @@ public class ExceptionCheckers {
         return validNumber;
     }
 
-    public static int checkIntegerInBounds(String prompt, String tryAgainMessage, int comparedNum, double lowerBound, double upperBound) {
+    public static double checkIntegerInBounds(String prompt, String tryAgainMessage, double comparedNum, double lowerBound, double upperBound) {
         while (comparedNum <= lowerBound || comparedNum > upperBound) {
             clearScreen();
             IO.println(tryAgainMessage);
-            comparedNum = (int) getValidNumber(prompt, true);
+            comparedNum = getValidNumber(prompt, true);
         }
         clearScreen();
         return comparedNum;

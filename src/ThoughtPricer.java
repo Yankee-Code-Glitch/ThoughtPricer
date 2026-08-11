@@ -14,22 +14,27 @@ public class ThoughtPricer {
         return (1 / ARSPerHour) * SECONDS_IN_HOUR;
     }
 
-    static void calculateSecondsPerARS() {
+    public static void calculateSecondsPerARS() {
 
-        FoodItem foodItem = InputHandler.ObjectMeasurements();
+        FoodItem foodItem = InputHandler.objectMeasurements();
 
         double costPerCalorie = ThoughtPricer.FindCalorieDensity(foodItem);
 
-        double secondsPerARS = ThoughtPricer.secondsPerARS(costPerCalorie, 1500);
+        double secondsPerARS = ThoughtPricer.secondsPerARS(costPerCalorie, CurrencyAPI.getExchangeRate());
 
         boolean isSolid = false;
 
-        double minutesPerARS;
+        if (foodItem.state() == FoodMeasureSystem.KILOS || foodItem.state() == FoodMeasureSystem.POUNDS) {
+            isSolid = true;
+        }
 
-        if  (foodItem.state() == FoodMeasureSystem.KILOS || foodItem.state() == FoodMeasureSystem.POUNDS) {isSolid = true;}
+        IO.println("You'd get ~" + Math.round(secondsPerARS) + " seconds of thinking per Argentinean peso by " + (isSolid ? "eating" : "drinking") + " that food!");
 
-        IO.println("You'd get " + secondsPerARS + " seconds of thinking per Argentinean peso by "  + (isSolid ? "eating" : "drinking")  + "that food!");
+        if (secondsPerARS > 180) {
+            int minutesPerARS = (int) Math.floor(secondsPerARS / 60);
+            int secondsLeft = (int) Math.round((secondsPerARS / 60) % 60);
 
-        if (secondsPerARS > 300) {minutesPerARS = secondsPerARS/60; IO.println("That's equivalent to " + minutesPerARS + " minutes!");}
+            IO.println("That's equivalent to ~" + minutesPerARS + " minutes" + (secondsLeft > 0? " and " + secondsLeft + " seconds" : "") + "!");
+        }
     }
 }
