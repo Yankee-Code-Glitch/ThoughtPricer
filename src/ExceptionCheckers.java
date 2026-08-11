@@ -21,7 +21,7 @@ public class ExceptionCheckers {
         return validNumber;
     }
 
-    public static double checkIntegerInBounds(String userPrompt, String tryAgainMessage, double comparedNum, double lowerBound, double upperBound, boolean isInteger) {
+    public static double checkNumberInBounds(String userPrompt, String tryAgainMessage, double comparedNum, double lowerBound, double upperBound, boolean isInteger) {
         while (comparedNum <= lowerBound || comparedNum > upperBound) {
             clearScreen();
             IO.println(tryAgainMessage);

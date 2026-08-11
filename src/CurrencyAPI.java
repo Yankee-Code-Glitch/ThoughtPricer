@@ -15,36 +15,37 @@ public class CurrencyAPI {
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String jsonResponse = response.body();
 
-            int sourceCurrencyStartIndex = response.body().indexOf("\"" + foodContext.sourceCurrency() + "\":");
-            int sourceCurrencyEndIndex = response.body().indexOf(",", sourceCurrencyStartIndex);
+            int sourceCurrencyStartIndex = jsonResponse.indexOf("\"" + foodContext.sourceCurrency() + "\":");
+            int sourceCurrencyEndIndex = jsonResponse.indexOf(",", sourceCurrencyStartIndex);
 
             if (sourceCurrencyStartIndex == -1) {
                 throw new IllegalArgumentException("This currency is not supported.");
             }
 
             if (sourceCurrencyEndIndex == -1) {
-                sourceCurrencyEndIndex = response.body().indexOf("}");
+                sourceCurrencyEndIndex = jsonResponse.indexOf("}");
             }
 
-            //"AAA:" is 6 digits long, so we add 6 to skip ahead of where the currency code is
-            int targetCurrencyStartIndex = response.body().indexOf("\"" + foodContext.targetCurrency() + "\":");
-            int targetCurrencyEndIndex = response.body().indexOf(",", targetCurrencyStartIndex);
+            int targetCurrencyStartIndex = jsonResponse.indexOf("\"" + foodContext.targetCurrency() + "\":");
+            int targetCurrencyEndIndex = jsonResponse.indexOf(",", targetCurrencyStartIndex);
 
             if (targetCurrencyStartIndex == -1) {
                 throw new IllegalArgumentException("This currency is not supported.");
             }
 
             if (targetCurrencyEndIndex == -1) {
-                targetCurrencyEndIndex = response.body().indexOf("}");
+                targetCurrencyEndIndex = jsonResponse.indexOf("}");
             }
 
-            String sourceCurrency = response.body().substring(sourceCurrencyStartIndex + foodContext.sourceCurrency().length() + 3, sourceCurrencyEndIndex).trim();
-            String targetCurrency = response.body().substring(targetCurrencyStartIndex + foodContext.targetCurrency().length() + 3, targetCurrencyEndIndex).trim();
+            //Add 3 to the length to account for the quotation marks and colon
+            String sourceCurrency = jsonResponse.substring(sourceCurrencyStartIndex + foodContext.sourceCurrency().length() + 3, sourceCurrencyEndIndex).trim();
+            String targetCurrency = jsonResponse.substring(targetCurrencyStartIndex + foodContext.targetCurrency().length() + 3, targetCurrencyEndIndex).trim();
             return Double.parseDouble(targetCurrency) / Double.parseDouble(sourceCurrency);
 
         } catch (Exception e) {
-            if (foodContext.choice()) {
+            if (foodContext.shouldConvert()) {
                 IO.println(e.getMessage());
                 IO.println("Could not reach currency API. The conversion to " + foodContext.targetCurrency() + " will not happen.\n");
             }

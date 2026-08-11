@@ -1,3 +1,3 @@
-public record FoodContext(double weight, int calorieAmt, double cost, FoodMeasureSystem state,
-                          String sourceCurrency, String targetCurrency, boolean choice) {
+public record FoodContext(double weight, int calorieAmt, double cost, FoodMeasureSystem foodUnitOfMeasurement,
+                          String sourceCurrency, String targetCurrency, boolean shouldConvert) {
 }

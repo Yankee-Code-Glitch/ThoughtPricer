@@ -8,15 +8,17 @@ public class ThoughtPricer {
 
         double secondsPerCurrency = MathHandler.secondsPerCurrency(costPerCalorie, CurrencyAPI.getExchangeRate(foodContext));
 
-        boolean isSolid = foodContext.state() == FoodMeasureSystem.KILOS || foodContext.state() == FoodMeasureSystem.POUNDS;
+        boolean isSolid = foodContext.foodUnitOfMeasurement() == FoodMeasureSystem.KILOS || foodContext.foodUnitOfMeasurement() == FoodMeasureSystem.POUNDS;
 
-        IO.println("You'd get ~" + Math.round(secondsPerCurrency) + " seconds of thinking per " + (foodContext.choice() ? foodContext.targetCurrency() : "generic currency") + " by " + (isSolid ? "eating" : "drinking") + " that!");
+        IO.println("You'd get ~" + Math.round(secondsPerCurrency) + " seconds of thinking per " + (foodContext.shouldConvert() ? foodContext.targetCurrency() : "generic currency") + " by " + (isSolid ? "eating" : "drinking") + " that!");
 
         if (secondsPerCurrency > 180) {
             int minutesPerCurrency = (int) Math.floor(secondsPerCurrency / 60);
             int secondsLeft = (int) Math.round(secondsPerCurrency % 60);
 
             IO.println("That's equivalent to ~" + minutesPerCurrency + " minutes" + (secondsLeft > 0 ? " and " + secondsLeft + " seconds" : "") + "!");
+
+            MathHandler.comparePennyWeightToFoodWeight(foodContext);
         }
     }
 }
