@@ -1,3 +1,6 @@
+import java.util.ResourceBundle;
+import java.util.Locale;
+
 public class InputHandler {
     public static FoodContext getFoodContext() {
 
@@ -6,6 +9,18 @@ public class InputHandler {
         String sourceCurrency = "USD";
         String targetCurrency = "USD";
         boolean shouldConvert = false;
+        Locale spanishLocale = new Locale("es", "MX");
+        ResourceBundle spanishBundle = ResourceBundle.getBundle("messages", spanishLocale);
+
+        String selectLang = String.format(Main.messages.getString("lang.select"));
+
+        int langChoice = (int) ExceptionCheckers.getValidNumberInBounds(selectLang,
+                (Main.messages.getString("error.invalid.choice.menu")) + "/" + (spanishBundle.getString("error.invalid.choice.menu")),
+                0, 2, true);
+
+        if (langChoice == 2) {
+            Main.messages = spanishBundle;
+        }
 
         IO.println(Main.messages.getString("greeting.intro").replace("\\n", "\n"));
         IO.readln();
