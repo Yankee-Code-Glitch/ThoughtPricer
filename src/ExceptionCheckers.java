@@ -15,7 +15,10 @@ public class ExceptionCheckers {
                 isInvalid = false;
             } catch (NumberFormatException e) {
                 clearScreen();
-                IO.println("Please enter a valid " + (isInteger ? "integer" : "decimal") + " and try again.");
+                // Piecing together the exact text fragments from the dictionary
+                IO.println(Main.messages.getString("error.invalid.format.start") +
+                        (isInteger ? Main.messages.getString("text.integer") : Main.messages.getString("text.decimal")) +
+                        Main.messages.getString("error.invalid.format.end"));
             }
         }
         return validNumber;
@@ -23,14 +26,11 @@ public class ExceptionCheckers {
 
     public static double getValidNumberInBounds(String prompt, String tryAgainMessage, double lowerBound, double upperBound, boolean isInteger) {
         double userInput;
-
         while (true) {
             userInput = getValidNumber(prompt, isInteger);
-
             if (userInput > lowerBound && userInput <= upperBound) {
                 break;
             }
-
             clearScreen();
             IO.println(tryAgainMessage);
         }
@@ -43,11 +43,9 @@ public class ExceptionCheckers {
         while (true) {
             IO.println(prompt);
             userInput = IO.readln();
-
             if (userInput.length() == requiredLength) {
                 break;
             }
-
             clearScreen();
             IO.println(tryAgainMessage);
         }

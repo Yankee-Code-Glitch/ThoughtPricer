@@ -15,39 +15,36 @@ public class CurrencyAPI {
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            String jsonResponse = response.body();
 
-            int sourceCurrencyStartIndex = jsonResponse.indexOf("\"" + foodContext.sourceCurrency() + "\":");
-            int sourceCurrencyEndIndex = jsonResponse.indexOf(",", sourceCurrencyStartIndex);
+            String body = response.body();
 
+            int sourceCurrencyStartIndex = body.indexOf("\"" + foodContext.sourceCurrency() + "\":");
             if (sourceCurrencyStartIndex == -1) {
-                throw new IllegalArgumentException("This currency is not supported.");
+                throw new IllegalArgumentException(Main.messages.getString("error.api.unsupported.currency"));
             }
-
+            int sourceCurrencyEndIndex = body.indexOf(",", sourceCurrencyStartIndex);
             if (sourceCurrencyEndIndex == -1) {
-                sourceCurrencyEndIndex = jsonResponse.indexOf("}");
+                sourceCurrencyEndIndex = body.indexOf("}", sourceCurrencyStartIndex);
             }
 
-            int targetCurrencyStartIndex = jsonResponse.indexOf("\"" + foodContext.targetCurrency() + "\":");
-            int targetCurrencyEndIndex = jsonResponse.indexOf(",", targetCurrencyStartIndex);
-
+            int targetCurrencyStartIndex = body.indexOf("\"" + foodContext.targetCurrency() + "\":");
             if (targetCurrencyStartIndex == -1) {
-                throw new IllegalArgumentException("This currency is not supported.");
+                throw new IllegalArgumentException(Main.messages.getString("error.api.unsupported.currency"));
             }
-
+            int targetCurrencyEndIndex = body.indexOf(",", targetCurrencyStartIndex);
             if (targetCurrencyEndIndex == -1) {
-                targetCurrencyEndIndex = jsonResponse.indexOf("}");
+                targetCurrencyEndIndex = body.indexOf("}", targetCurrencyStartIndex);
             }
 
-            //Add 3 to the length to account for the quotation marks and colon
-            String sourceCurrency = jsonResponse.substring(sourceCurrencyStartIndex + foodContext.sourceCurrency().length() + 3, sourceCurrencyEndIndex).trim();
-            String targetCurrency = jsonResponse.substring(targetCurrencyStartIndex + foodContext.targetCurrency().length() + 3, targetCurrencyEndIndex).trim();
-            return Double.parseDouble(targetCurrency) / Double.parseDouble(sourceCurrency);
+            String sourceRate = body.substring(sourceCurrencyStartIndex + foodContext.sourceCurrency().length() + 3, sourceCurrencyEndIndex).trim();
+            String targetRate = body.substring(targetCurrencyStartIndex + foodContext.targetCurrency().length() + 3, targetCurrencyEndIndex).trim();
+
+            return Double.parseDouble(targetRate) / Double.parseDouble(sourceRate);
 
         } catch (Exception e) {
             if (foodContext.shouldConvert()) {
                 IO.println(e.getMessage());
-                IO.println("Could not reach currency API. The conversion to " + foodContext.targetCurrency() + " will not happen.\n");
+                IO.println(Main.messages.getString("error.api.unreachable.start") + foodContext.targetCurrency() + Main.messages.getString("error.api.unreachable.end"));
             }
             return CONVERSION_RATE_BACKUP;
         }

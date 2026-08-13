@@ -27,17 +27,19 @@ public class MathHandler {
         FoodContext toUSD = new FoodContext(0, 0, foodContext.cost(), foodContext.foodUnitOfMeasurement(), foodContext.sourceCurrency(), "USD", true);
         double exchangeRate = CurrencyAPI.getExchangeRate(toUSD);
         double costInUSD = foodContext.cost() * exchangeRate;
-        int numberOfPennies = (int) costInUSD * 100;
+
+        // Parentheses added to calculate the 100 multiplier BEFORE truncating the decimal
+        int numberOfPennies = (int) (costInUSD * 100);
         double weighOfCostInPennies = WEIGHT_OF_PENNY * numberOfPennies;
 
         double gramWeight = convertToGrams(foodContext);
 
         if (gramWeight > weighOfCostInPennies) {
-            IO.println("Fun fact: Your food is heavier than the pennies it'd take to buy it.");
+            IO.println(Main.messages.getString("result.physical.food.heavier"));
         } else if (weighOfCostInPennies > gramWeight) {
-            IO.println("Fun fact: The money you spent to buy your food in pennies is heavier than the food itself.");
+            IO.println(Main.messages.getString("result.physical.money.heavier"));
         } else {
-            IO.println("How...??? The weight in pennies of your food and the weight of your food itself is the same... Perfectly balanced, as all things should be.");
+            IO.println(Main.messages.getString("result.physical.balance"));
         }
     }
 }
