@@ -15,7 +15,6 @@ public class CurrencyAPI {
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
             String body = response.body();
 
             int sourceCurrencyStartIndex = body.indexOf("\"" + foodContext.sourceCurrency() + "\":");
@@ -44,7 +43,7 @@ public class CurrencyAPI {
         } catch (Exception e) {
             if (foodContext.shouldConvert()) {
                 IO.println(e.getMessage());
-                IO.println(Main.messages.getString("error.api.unreachable.start") + foodContext.targetCurrency() + Main.messages.getString("error.api.unreachable.end"));
+                IO.println(String.format(Main.messages.getString("error.api.unreachable"), foodContext.targetCurrency()));
             }
             return CONVERSION_RATE_BACKUP;
         }

@@ -1,5 +1,5 @@
-import java.util.ResourceBundle;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class InputHandler {
     public static FoodContext getFoodContext() {
@@ -9,14 +9,14 @@ public class InputHandler {
         String sourceCurrency = "USD";
         String targetCurrency = "USD";
         boolean shouldConvert = false;
-        Locale spanishLocale = new Locale("es", "MX");
-        ResourceBundle spanishBundle = ResourceBundle.getBundle("messages", spanishLocale);
 
-        String selectLang = String.format(Main.messages.getString("lang.select"));
+        ResourceBundle englishBundle = ResourceBundle.getBundle("messages", Locale.US);
+        ResourceBundle spanishBundle = ResourceBundle.getBundle("messages", new Locale("es", "MX"));
 
-        int langChoice = (int) ExceptionCheckers.getValidNumberInBounds(selectLang,
-                (Main.messages.getString("error.invalid.choice.menu")) + "/" + (spanishBundle.getString("error.invalid.choice.menu")),
-                0, 2, true);
+        String selectLangPrompt = String.format("%s / %s%s", englishBundle.getString("lang.select"), spanishBundle.getString("lang.select"), englishBundle.getString("lang.options"));
+        String selectLangError = String.format("%s / %s", englishBundle.getString("error.invalid.choice.menu"), spanishBundle.getString("error.invalid.choice.menu"));
+
+        int langChoice = (int) ExceptionCheckers.getValidNumberInBounds(selectLangPrompt, selectLangError, 0, 2, true);
 
         if (langChoice == 2) {
             Main.messages = spanishBundle;

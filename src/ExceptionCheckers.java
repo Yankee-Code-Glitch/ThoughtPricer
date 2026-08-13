@@ -15,10 +15,8 @@ public class ExceptionCheckers {
                 isInvalid = false;
             } catch (NumberFormatException e) {
                 clearScreen();
-                // Piecing together the exact text fragments from the dictionary
-                IO.println(Main.messages.getString("error.invalid.format.start") +
-                        (isInteger ? Main.messages.getString("text.integer") : Main.messages.getString("text.decimal")) +
-                        Main.messages.getString("error.invalid.format.end"));
+                String numberType = isInteger ? Main.messages.getString("text.integer") : Main.messages.getString("text.decimal");
+                IO.println(String.format(Main.messages.getString("error.invalid.format"), numberType));
             }
         }
         return validNumber;
