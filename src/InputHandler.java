@@ -4,7 +4,7 @@ import java.util.ResourceBundle;
 public class InputHandler {
     public static FoodContext getFoodContext() {
 
-        FoodMeasureSystem state;
+        FoodMeasureSystem foodUnitOfMeasurement;
         double weight;
         String sourceCurrency = "USD";
         String targetCurrency = "USD";
@@ -49,7 +49,7 @@ public class InputHandler {
                 Main.messages.getString("error.invalid.choice.measure"),
                 0, 4, true);
 
-        state = switch (foodMeasureInput) {
+        foodUnitOfMeasurement = switch (foodMeasureInput) {
             case 1 -> {
                 weight = ExceptionCheckers.getValidNumberInBounds(Main.messages.getString("prompt.weight.kilos"), Main.messages.getString("error.invalid.positive.number"), 0, Integer.MAX_VALUE, false);
                 yield FoodMeasureSystem.KILOS;
@@ -69,8 +69,10 @@ public class InputHandler {
             default -> throw new IllegalStateException(Main.messages.getString("error.invalid.measure.range"));
         };
 
+        String caloriePrompt = (foodUnitOfMeasurement == FoodMeasureSystem.KILOS || foodUnitOfMeasurement == FoodMeasureSystem.POUNDS ? Main.messages.getString("prompt.calories.solid") : Main.messages.getString("prompt.calories.liquid"));
+
         int calorieAmt = (int) ExceptionCheckers.getValidNumberInBounds(
-                Main.messages.getString("prompt.calories"),
+                caloriePrompt,
                 Main.messages.getString("error.invalid.whole.number"),
                 -1, Integer.MAX_VALUE, true);
 
@@ -79,6 +81,6 @@ public class InputHandler {
                 Main.messages.getString("error.invalid.positive.number"),
                 0, Integer.MAX_VALUE, false);
 
-        return new FoodContext(weight, calorieAmt, cost, state, sourceCurrency, targetCurrency, shouldConvert);
+        return new FoodContext(weight, calorieAmt, cost, foodUnitOfMeasurement, sourceCurrency, targetCurrency, shouldConvert);
     }
 }
