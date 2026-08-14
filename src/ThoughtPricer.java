@@ -1,15 +1,20 @@
 public class ThoughtPricer {
 
     public static void calculateSecondsPerCurrency() {
-
+        final int THREE_MINUTES = 180;
+        final int ONE_MINUTE = 60;
         FoodContext foodContext = InputHandler.getFoodContext();
         double costPerCalorie = MathHandler.findCalorieDensity(foodContext);
-        double secondsPerCurrency = MathHandler.secondsPerCurrency(costPerCalorie, CurrencyAPI.getExchangeRate(foodContext));
+        double secondsPerCurrency;
 
-        boolean isSolid = foodContext.foodUnitOfMeasurement() == FoodMeasureSystem.KILOS || foodContext.foodUnitOfMeasurement() == FoodMeasureSystem.POUNDS;
+        if (foodContext.shouldConvert()) {
+            secondsPerCurrency = MathHandler.secondsPerCurrency(costPerCalorie, CurrencyAPI.getExchangeRate(foodContext));
+        } else {
+            secondsPerCurrency = MathHandler.secondsPerCurrency(costPerCalorie, 1);
+        }
 
         String currencyText = foodContext.shouldConvert() ? foodContext.targetCurrency() : Main.messages.getString("text.generic.currency");
-        String actionText = isSolid ? Main.messages.getString("text.eating") : Main.messages.getString("text.drinking");
+        String actionText = foodContext.isSolid() ? Main.messages.getString("text.eating") : Main.messages.getString("text.drinking");
 
         String secondsOutput = String.format(
                 Main.messages.getString("result.seconds.full"),
@@ -19,9 +24,9 @@ public class ThoughtPricer {
         );
         IO.println(secondsOutput);
 
-        if (secondsPerCurrency > 180) {
-            int minutesPerCurrency = (int) Math.floor(secondsPerCurrency / 60);
-            int secondsLeft = (int) Math.round(secondsPerCurrency % 60);
+        if (secondsPerCurrency > THREE_MINUTES) {
+            int minutesPerCurrency = (int) Math.floor(secondsPerCurrency / ONE_MINUTE);
+            int secondsLeft = (int) Math.round(secondsPerCurrency % ONE_MINUTE);
 
             String minutesOutput = String.format(
                     Main.messages.getString("result.minutes.full"),
@@ -29,6 +34,8 @@ public class ThoughtPricer {
                     secondsLeft
             );
             IO.println(minutesOutput);
+
+            MathHandler.comparePennyWeightToFoodWeight(foodContext);
         }
     }
 }

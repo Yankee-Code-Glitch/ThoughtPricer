@@ -24,11 +24,10 @@ public class MathHandler {
     public static void comparePennyWeightToFoodWeight(FoodContext foodContext) {
         final float WEIGHT_OF_PENNY = 2.5f;
 
-        FoodContext toUSD = new FoodContext(0, 0, foodContext.cost(), foodContext.foodUnitOfMeasurement(), foodContext.sourceCurrency(), "USD", true);
+        FoodContext toUSD = new FoodContext(0, 0, foodContext.cost(), foodContext.foodUnitOfMeasurement(), foodContext.sourceCurrency(), "USD", true, true);
         double exchangeRate = CurrencyAPI.getExchangeRate(toUSD);
         double costInUSD = foodContext.cost() * exchangeRate;
 
-        // Parentheses added to calculate the 100 multiplier BEFORE truncating the decimal
         int numberOfPennies = (int) (costInUSD * 100);
         double weighOfCostInPennies = WEIGHT_OF_PENNY * numberOfPennies;
 

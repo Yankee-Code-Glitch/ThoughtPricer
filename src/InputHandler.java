@@ -69,7 +69,8 @@ public class InputHandler {
             default -> throw new IllegalStateException(Main.messages.getString("error.invalid.measure.range"));
         };
 
-        String caloriePrompt = (foodUnitOfMeasurement == FoodMeasureSystem.KILOS || foodUnitOfMeasurement == FoodMeasureSystem.POUNDS ? Main.messages.getString("prompt.calories.solid") : Main.messages.getString("prompt.calories.liquid"));
+        boolean isSolid = foodUnitOfMeasurement == FoodMeasureSystem.KILOS || foodUnitOfMeasurement == FoodMeasureSystem.POUNDS;
+        String caloriePrompt = (isSolid ? Main.messages.getString("prompt.calories.solid") : Main.messages.getString("prompt.calories.liquid"));
 
         int calorieAmt = (int) ExceptionCheckers.getValidNumberInBounds(
                 caloriePrompt,
@@ -81,6 +82,6 @@ public class InputHandler {
                 Main.messages.getString("error.invalid.positive.number"),
                 0, Integer.MAX_VALUE, false);
 
-        return new FoodContext(weight, calorieAmt, cost, foodUnitOfMeasurement, sourceCurrency, targetCurrency, shouldConvert);
+        return new FoodContext(weight, calorieAmt, cost, foodUnitOfMeasurement, sourceCurrency, targetCurrency, shouldConvert, isSolid);
     }
 }
